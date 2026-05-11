@@ -1,0 +1,9 @@
+# TrajectoryPoint
+
+geometry_msgs/Pose pose
+float64 max_velocity_mps
+bool is_stop_point
+string stop_reason
+float64 longitudinal_velocity_mps
+float64 acceleration_mps2
+builtin_interfaces/Duration time_from_start

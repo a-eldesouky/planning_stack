@@ -1,0 +1,28 @@
+# Build / install / logs / data
+**/build/
+install/
+log/
+logs/
+
+/.vscode/ 
+
+/src/log
+
+*.vscode/
+
+*.pyc
+__pycache__/
+
+*.log
+
+**/log/
+
+data/
+
+# Local tooling, not part of the project
+.claude/
+.stfolder/
+.stignore
+
+# Vendored CARLA ROS bridge is cloned separately, not committed here
+/src/ros-bridge/
