@@ -1,0 +1,22 @@
+<package format="3">
+  <name>hd_map</name>
+  <version>1.0.0</version>
+  <description>HD Map loader and visualizer for Town01 planning modules</description>
+  <maintainer email="abdelrhman.aldesoky@outlook.com">Abdelrahman Eldesouky</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>ament_index_cpp</depend>
+  <depend>visualization_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>nlohmann_json</depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
