@@ -1,0 +1,8 @@
+mission_planner_node:
+  ros__parameters:
+    # Topics
+    odometry_topic:      "/carla/ego_vehicle/odometry"
+    goal_topic:          "/goal_pose"
+    route_topic:         "/mission_planner/route"
+    route_display_topic: "/mission_planner/route_display"
+

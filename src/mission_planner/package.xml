@@ -1,0 +1,24 @@
+<package format="3">
+  <name>mission_planner</name>
+  <version>1.0.0</version>
+  <description>Global route planning over the HD map lanelet graph.</description>
+  <maintainer email="abdelrhman.aldesoky@outlook.com">Abdelrahman Eldesouky</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>hd_map</depend>
+  <depend>rclcpp</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>planning_msgs</depend>
+
+  <!-- Testing -->
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
