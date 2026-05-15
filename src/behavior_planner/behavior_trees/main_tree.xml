@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Main Behavior Tree: Behavior Planner
+  Framework: BehaviorTree.CPP v4
+
+  Priority Order (highest to lowest):
+    1. Controlled T-Junction Handling : safety-critical, traffic light
+    2. Avoid Static Leading Vehicle   : obstacle avoidance if possible
+    3. Wait Behind Static Obstacle    : fallback if avoidance impossible
+    4. Follow Leading Vehicle         : adaptive cruise control
+    5. Follow Lane                    : normal driving (default fallback)
+
+  Architecture:
+    All nodes read/write through BehaviorContext.
+    Action nodes do NOT publish ROS topics directly.
+    They write the selected BehaviorCommand to BehaviorContext.
+    BehaviorPlannerNode publishes after each tick.
+-->
+<root BTCPP_format="4">
+
+  <BehaviorTree ID="MainTree">
+
+    <!--
+      Fallback (Selector) semantics:
+        - Try each child in order.
+        - If a child returns SUCCESS → stop, return SUCCESS.
+        - If a child returns FAILURE → try the next child.
+        - If all children fail → return FAILURE.
+
+      Combined with Sequences:
+        - A Sequence runs children in order.
+        - If any child returns FAILURE → the Sequence fails → Fallback tries the next branch.
+        - This creates clean priority with conditional guards.
+    -->
+    <Fallback name="BehaviorRoot">
+
+      <!-- ============================================================
+           PRIORITY 1: Controlled T-Junction / Traffic Light Handling
+           Highest priority: safety-critical.
+
+           Logic:
+             IsAtTJunction      → are we near a junction / traffic light trigger?
+             IsTrafficLightRedOrYellow → is the relevant TL red or yellow?
+             StopAtTrafficLight → publish STOP_AT_TRAFFIC_LIGHT command
+
+           If light is GREEN:
+             IsTrafficLightRedOrYellow returns FAILURE
+             → This Sequence fails
+             → Fallback continues to next branch (obstacle handling or follow lane)
+             No extra "ProceedOnGreen" action needed.
+      ============================================================ -->
+      <Sequence name="ControlledTJunctionHandling">
+        <IsAtTJunction/>
+        <IsTrafficLightRedOrYellow/>
+        <StopAtTrafficLight/>
+      </Sequence>
+
+      <!-- ============================================================
+           PRIORITY 2: Avoid Static Leading Vehicle
+           Active when a static obstacle blocks the route AND
+           a safe avoidance maneuver is possible.
+
+           Logic:
+             IsLeadingVehicleDetected → is there something ahead on route?
+             IsLeadingVehicleStatic   → is it not moving (speed < threshold)?
+             IsAvoidancePossible      → is there space to go around?
+             RequestAvoidance         → publish AVOID_STATIC_OBSTACLE command
+
+           If avoidance is NOT possible:
+             IsAvoidancePossible returns FAILURE
+             → This Sequence fails
+             → Fallback continues to WaitBehindStaticObstacle branch
+      ============================================================ -->
+      <Sequence name="AvoidStaticLeadingVehicle">
+        <IsLeadingVehicleDetected/>
+        <IsLeadingVehicleStatic/>
+        <IsAvoidancePossible/>
+        <RequestAvoidance/>
+      </Sequence>
+
+      <!-- ============================================================
+           PRIORITY 3: Wait Behind Static Obstacle (fallback avoidance)
+           Active when a static obstacle is detected but avoidance
+           is not currently possible.
+
+           Logic:
+             IsLeadingVehicleDetected → still a leading vehicle?
+             IsLeadingVehicleStatic   → still not moving?
+             WaitBehindObstacle       → publish WAIT_BEHIND_OBSTACLE command
+
+           The vehicle will stop and wait.
+           Periodically, IsAvoidancePossible is re-evaluated on each tick.
+           When avoidance becomes possible, Priority 2 takes over.
+      ============================================================ -->
+      <Sequence name="WaitBehindStaticObstacle">
+        <IsLeadingVehicleDetected/>
+        <IsLeadingVehicleStatic/>
+        <WaitBehindObstacle/>
+      </Sequence>
+
+      <!-- ============================================================
+           PRIORITY 4: Follow Leading Vehicle (adaptive cruise)
+           Active when a moving vehicle is detected ahead on the route.
+
+           Logic:
+             IsLeadingVehicleDetected → is there something ahead?
+             IsLeadingVehicleMoving   → is it moving (speed >= threshold)?
+             FollowLeadingVehicle     → publish FOLLOW_LEADING_VEHICLE command
+
+           The local planner uses target_speed and safe_distance
+           from BehaviorCommand to adjust following behavior.
+      ============================================================ -->
+      <Sequence name="FollowLeadingVehicle">
+        <IsLeadingVehicleDetected/>
+        <IsLeadingVehicleMoving/>
+        <FollowLeadingVehicle/>
+      </Sequence>
+
+      <!-- ============================================================
+           PRIORITY 5 (Default): Follow Lane
+           The normal driving behavior when no other condition is active.
+           Always returns SUCCESS → ensures Fallback always resolves.
+
+           Logic:
+             FollowLane → publish FOLLOW_LANE command
+
+           The local planner tracks the global route at normal_speed.
+      ============================================================ -->
+      <FollowLane/>
+
+    </Fallback>
+
+  </BehaviorTree>
+
+</root>

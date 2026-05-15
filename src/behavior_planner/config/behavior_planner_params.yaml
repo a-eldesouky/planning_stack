@@ -1,0 +1,46 @@
+behavior_planner_node:
+  ros__parameters:
+    tick_rate_hz: 10.0
+    enable_groot_monitoring: true
+
+    # Topics
+    global_route_topic:              "/mission_planner/route"
+    odometry_topic:                  "/carla/ego_vehicle/odometry"
+    objects_topic:                   "/fake/objects"
+    traffic_light_status_topic:      "/carla/traffic_lights/status"
+    traffic_light_info_topic:        "/carla/traffic_lights/info"
+    behavior_command_topic:          "/behavior_planner/behavior_command"
+    behavior_tree_file:              "behavior_trees/main_tree.xml"
+
+    # Speed limits (m/s)
+    normal_speed:     8.0       # lane following (target speed when no obstacle)
+    following_speed:  4.0       # cap when following a moving vehicle
+    avoidance_speed:  3.0       # speed during avoidance maneuver
+
+    # Leading vehicle detection
+    leading_vehicle_detection_distance: 20.0  # [m] max range to look ahead
+    safe_following_distance:            10.0  # [m] desired gap to maintain
+    route_lateral_threshold:             3.5  # [m] max lateral dist from route
+    static_speed_threshold:              0.5  # [m/s] below this = stationary
+
+    # Ego filter radius 
+    ego_filter_radius:                   2.5  # [m]
+
+    # Junction / traffic light
+    junction_detection_distance:  12.0   # [m] proximity to TL → "at junction"
+    traffic_light_stop_distance:  10.0   # [m] desired stop distance from line
+
+    # Avoidance
+    enable_avoidance:             true
+    minimum_avoidance_distance:   3.0    # [m] obstacle must be > this ahead
+    road_boundary_margin:         0.5    # [m] clearance from road edge
+
+    # Goal detection
+    goal_reached_threshold:       3.0    # [m] distance to goal to consider "reached"
+
+    # hysteresis
+    leading_vehicle_confirm_ticks:   1  # ticks to confirm leading vehicle presence
+    static_obstacle_confirm_ticks:   2  # ticks to confirm static obstacle presence
+    traffic_light_confirm_ticks:     2  # ticks to confirm traffic light state
+    exit_hysteresis_ticks:           3  # ticks to exit hysteresis
+    
