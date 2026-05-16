@@ -1,0 +1,71 @@
+local_planner_node:
+  ros__parameters:
+
+    # Vehicle model
+    vehicle:
+      lf: 0.7725
+      lr: 0.7725
+      wheelbase: 1.545
+      width: 1.45
+      length: 2.3
+      max_steering_angle: 0.2792
+      max_steering_rate: 0.17
+      min_turning_radius: 5.39
+
+    # Input topics
+    input:
+      route_topic: "/mission_planner/route"
+      odometry_topic: "/carla/ego_vehicle/odometry"
+      objects_topic: "/fake/objects"
+      behavior_command_topic: "/behavior_planner/behavior_command"
+
+    # Output topics
+    output:
+      trajectory_topic: "/local_planner/trajectory"
+      debug_trajectory_topic: "/local_planner/debug/trajectory"
+      publish_rate: 10.0
+      frame_id: "map"
+
+    # Path generation
+    path_following:
+      enable_smoothing: true      # Apply cubic spline post-smoothing to generated paths
+      lookahead_distance: 30.0
+      min_waypoint_spacing: 0.5
+      output_points: 100
+
+    # Route trimming
+    path_trim:
+      search_window_size: 100
+      look_behind_points: 2
+      max_cross_track_error: 3.0
+      goal_reached_threshold: 1.5
+
+    # Obstacle filtering and corridor constraints
+    obstacle_detection:
+      lookahead: 30.0
+      inflation: 0.8
+      corridor_width_multiplier: 1.5
+      ego_filter_multiplier: 0.5
+      road_boundary_margin: 0.1
+      avoidance_corridor_multiplier: 3.0
+      min_avoidance_corridor_half_width: 5.2
+      avoidance_release_distance: 8.0
+
+    # Hybrid A* planner
+    hybrid_astar:
+      grid_resolution: 0.5
+      heading_bins: 72
+      steering_samples: 11
+      step_size: 0.8
+      max_iterations: 15000
+      obstacle_inflation: 0.8
+      obstacle_lookahead: 30.0
+      heuristic_weight: 1.2
+      goal_position_tolerance: 1.5
+      goal_heading_tolerance: 0.35
+
+    # Behavior constraints
+    behavior:
+      stop_creep_speed: 0.5
+      stop_creep_distance: 2.0
+      stop_commit_distance: 4.0
