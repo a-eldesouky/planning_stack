@@ -1,0 +1,21 @@
+/**:
+  ros__parameters:
+    map_frame: "map"
+
+    #  Speed limits
+    cruise_speed: 8.33    # m/s = 30 km/h
+    max_speed:    13.89   # m/s = 50 km/h
+
+    #  Acceleration / Deceleration
+    a_max:       2.0      # m/s²
+    a_dec:       3.0      # m/s²
+
+    #  Jerk
+    j_max: 1.5            # m/s³
+
+    #  Curvature-based speed reduction
+    a_lat_max:               2.5     # m/s²
+    min_curvature_threshold: 0.0001  # 1/m  (ignore below 10 km radius)
+
+    #  Numerical stability
+    min_ds:            0.01   # m

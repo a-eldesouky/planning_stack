@@ -1,0 +1,49 @@
+controller_node:
+  ros__parameters:
+    topics:
+      trajectory: /velocity_profiler/trajectory
+      odometry: /carla/ego_vehicle/odometry
+      control_cmd: /carla/ego_vehicle/vehicle_control_cmd
+
+    vehicle:
+      wheelbase: 1.545
+      lf: 0.7725
+      lr: 0.7725
+      max_front_steer: 0.2792     # rad, about 16 deg
+      max_rear_steer: 0.2792      # rad, about 16 deg
+      max_steering_rate: 0.17     # rad/s
+      max_accel: 3.0              # m/s^2
+      max_decel: 4.0              # m/s^2
+      max_throttle: 1.0
+      max_brake: 1.0
+
+    double_ackermann:
+      enable_rear_steering: false
+      rear_steering_ratio: 0.3    # delta_rear = -ratio * delta_front internally
+
+    controller:
+      reference_speed: 5.0        # m/s fallback speed until the velocity profiler is integrated
+
+      # Pure Pursuit
+      lookahead_distance: 6.0     # base lookahead distance [m]
+      min_lookahead_distance: 4.0 # lower bound [m]
+      lookahead_time_gain: 0.3    # speed-scaled lookahead gain [s]
+
+      # Longitudinal PID
+      kp_speed: 0.8
+      ki_speed: 0.05
+      kd_speed: 0.02
+      integral_limit: 35.0
+
+      # Command smoothing: 1.0 = no filtering, smaller = smoother/slower response
+      steer_filter_alpha: 0.7
+      accel_filter_alpha: 0.8
+
+    control:
+      publish_rate: 20.0
+      trajectory_timeout: 1.0
+      odometry_timeout: 0.5
+
+    trajectory:
+      reference_points: 30
+      min_points: 2
