@@ -1,0 +1,26 @@
+<package format="3">
+  <name>planning_stack_bringup</name>
+  <version>1.0.0</version>
+  <description>Bringup package for the full path planning stack.</description>
+
+  <maintainer email="abdelrhman.aldesoky@outlook.com">Abdelrahman Eldesouky</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <exec_depend>carla_ros_bridge</exec_depend>
+  <exec_depend>hd_map</exec_depend>
+  <exec_depend>mission_planner</exec_depend>
+  <exec_depend>behavior_planner</exec_depend>
+  <exec_depend>local_planner</exec_depend>
+  <exec_depend>velocity_profiler</exec_depend>
+  <exec_depend>controller</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
